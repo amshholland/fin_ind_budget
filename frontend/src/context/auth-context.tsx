@@ -37,7 +37,7 @@ export function AuthContextProvider( { children }: { children: ReactNode; } ) {
                 userCreated: user.metadata.creationTime,
                 lastSignIn: user.metadata.lastSignInTime,
                 photoURL: user.photoURL,
-                favorites: []
+                budgetDay: undefined
             };
             addNewUser( newUser );
             setUserFromDb( newUser );

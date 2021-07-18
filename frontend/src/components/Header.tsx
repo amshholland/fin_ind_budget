@@ -1,0 +1,69 @@
+import "./Header.css";
+
+import { signInWithGoogle, signOut } from "../firebaseConfig";
+import { useContext, useState } from "react";
+
+import { AuthContext } from "../context/auth-context";
+import { useHistory } from "react-router-dom";
+
+function Header() {
+    const { user } = useContext( AuthContext );
+    console.log( user );
+    const [ signOutToggle, setSignOutToggle ] = useState( "none" );
+
+    function signOutDisplay() {
+        if ( signOutToggle === "none" ) {
+            setSignOutToggle( "flex" );
+        } else if ( signOutToggle === "flex" ) {
+            setSignOutToggle( "none" );
+        }
+    }
+
+    const history = useHistory();
+    const handleClick = () => history.push( '/favorites' );
+
+    return (
+        <header className="AppHeader" id="header">
+            <div className="TitleDiv">
+                <div className="logoDiv">
+                    <a href="/">
+                        <img className="logo" src={ process.env.PUBLIC_URL + '/FI_Logo.png' } alt="Financial Independence Logo" />
+                    </a>
+                </div>
+                { user && (
+                    <div className="GoogleUserPhoto">
+                        <div className="userPhoto" onClick={ () => signOutDisplay() }>
+                            { !!user.photoURL && (
+                                <img src={ user.photoURL } alt="google avatar" id="profilePic" />
+                            ) }
+                        </div>
+                        <div className="headerBtn" style={ { display: signOutToggle } }>
+                            { user && (
+                                <button className="headerButton" onClick={ handleClick }>
+                                    Favorites
+                                </button>
+                            ) }
+                        </div>
+                        <div className="headerBtn" style={ { display: signOutToggle } }>
+                            { user && (
+                                <button className="headerButton" id="signOut" onClick={ signOut }>
+                                    Sign out
+                                </button>
+                            ) }
+                        </div>
+                    </div>
+                ) }
+
+                <div className="GoogleAuth">
+                    { !user && (
+                        <button className="headerButton" onClick={ signInWithGoogle }>
+                            Sign in
+                        </button>
+                    ) }
+                </div>
+            </div>
+        </header >
+    );
+}
+
+export default Header;
